@@ -39,6 +39,7 @@ dependencies:
   flutter_animate: ^4.1.0
   dio: ^5.0.0
   provider: ^6.0.5
+  flutter_dotenv: ^4.0.0-nullsafety.0
 
 dev_dependencies:
   flutter_test:
@@ -95,6 +96,7 @@ flutter:
 assets:
   - assets/images/
   - assets/config/
+  - .env
 
 fonts:
   - family: ArialRound
