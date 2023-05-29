@@ -180,7 +180,9 @@ class _LoginScreenState extends State<LoginScreen>
                                            ),
                                            text: "Sign up\n",
                                            recognizer: TapGestureRecognizer()
-                                             ..onTap = () async {}
+                                             ..onTap = () async {
+                                             Navigator.of(context).pushNamed(Routes.signUp);
+                                           }
                                        ),
                                      ])
                                  )

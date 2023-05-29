@@ -5,22 +5,24 @@ import 'package:flutter_weather/widgets/textInput.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class ForgotPassword extends StatefulWidget {
-  ForgotPassword({Key? key}) : super(key: key);
+class CreateAccount extends StatefulWidget {
+  CreateAccount({Key? key}) : super(key: key);
 
   @override
-  _ForgotPasswordState createState() => _ForgotPasswordState();
+  _CreateAccountState createState() => _CreateAccountState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword>
+class _CreateAccountState extends State<CreateAccount>
     with SingleTickerProviderStateMixin {
 
   final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   late AnimationController controller;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     controller = AnimationController(
         duration: const Duration(seconds: 5),
@@ -36,9 +38,14 @@ class _ForgotPasswordState extends State<ForgotPassword>
 
   @override
   Widget build(BuildContext context) {
-
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final double screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     return SafeArea(
       child: Scaffold(
@@ -54,7 +61,7 @@ class _ForgotPasswordState extends State<ForgotPassword>
                           "assets/anim/background_day_to_night.json",
                           fit: BoxFit.cover,
                           controller: controller,
-                          onLoaded: (animation){
+                          onLoaded: (animation) {
                             controller.reverse(from: 100);
                           }
                       )
@@ -76,8 +83,9 @@ class _ForgotPasswordState extends State<ForgotPassword>
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 50),
                                     child: Text(
-                                      'Enter your email, we will send you password reset instructions',
-                                      style: Provider.of<ThemeModel>(context)
+                                      'Fill in all fields to register your new account',
+                                      style: Provider
+                                          .of<ThemeModel>(context)
                                           .currentTheme
                                           .textTheme
                                           .bodyMedium
@@ -85,20 +93,36 @@ class _ForgotPasswordState extends State<ForgotPassword>
                                     ),
                                   ),
                                   TextInput(
-                                      icon: Icons.email,
-                                      controller: _emailController,
-                                      hintText: 'Enter your email...',
-                                      labelText: 'Email'
+                                      icon: Icons.person,
+                                      controller: _usernameController,
+                                      hintText: 'Enter your username...',
+                                      labelText: 'Username'
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                    child: TextInput(
+                                        icon: Icons.email,
+                                        controller: _emailController,
+                                        hintText: 'Enter your email...',
+                                        labelText: 'Email'
+                                    ),
+                                  ),
+                                  TextInput(
+                                      icon: Icons.password,
+                                      controller: _passwordController,
+                                      hintText: 'Enter your password...',
+                                      labelText: 'Password'
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 50.0),
                                     child: MaterialButton(
-                                        onPressed: (){
+                                        onPressed: () {
                                           Navigator.of(context).pop();
                                         },
                                         color: Colors.grey,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:  BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(
+                                              10),
                                         ),
                                         child: Container(
                                           alignment: Alignment.center,
@@ -107,9 +131,14 @@ class _ForgotPasswordState extends State<ForgotPassword>
                                             maxWidth: screenWidth * 0.4,
                                           ),
                                           child: Text(
-                                            "Reset",
+                                            "Register",
                                             textAlign: TextAlign.center,
-                                            style: Provider.of<ThemeModel>(context).currentTheme.textTheme.bodyMedium?.copyWith(fontSize: 26),
+                                            style: Provider
+                                                .of<ThemeModel>(context)
+                                                .currentTheme
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(fontSize: 26),
                                           ),
                                         )
                                     ),
@@ -129,8 +158,9 @@ class _ForgotPasswordState extends State<ForgotPassword>
               children: [
                 AppBar(
                   title: Text(
-                    'Reset password',
-                    style: Provider.of<ThemeModel>(context)
+                    'SignUp',
+                    style: Provider
+                        .of<ThemeModel>(context)
                         .currentTheme
                         .textTheme
                         .bodyMedium
