@@ -44,8 +44,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 80),
-                      child: Lottie.network(
-                          "https://assets3.lottiefiles.com/private_files/lf30_kcosxgdt.json",
+                      child: Lottie.asset(
+                          'assets/anim/loading_indicator.json',
                           fit: BoxFit.fill,
                         height: screenWidth,
                         width: screenWidth

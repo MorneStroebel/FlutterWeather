@@ -93,12 +93,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-assets:
-  - assets/images/
-  - assets/config/
-  - .env
+  assets:
+    - assets/images/
+    - assets/config/
+    - assets/anim/
+    - .env
 
-fonts:
-  - family: ArialRound
-    fonts:
-      - asset: fonts/arial_round.ttf
+  fonts:
+    - family: ArialRound
+      fonts:
+        - asset: fonts/arial_round.ttf

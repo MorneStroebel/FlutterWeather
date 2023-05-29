@@ -45,20 +45,19 @@ class _LoginScreenState extends State<LoginScreen>
    final double screenHeight = MediaQuery.of(context).size.height;
    final double screenWidth = MediaQuery.of(context).size.width;
 
-   return Scaffold(
-     body: Center(
-       child: SafeArea(
+   return SafeArea(
+     child: Scaffold(
+       body: Center(
          child: Stack(
            children: [
              SizedBox(
                width: screenWidth,
                height: double.infinity,
-               child: Lottie.network(
-                   "https://assets8.lottiefiles.com/private_files/lf30_dbkiaaqd.json",
+               child: Lottie.asset(
+                   'assets/anim/background_day_to_night.json',
                    fit: BoxFit.cover,
                    controller: controller,
                    onLoaded: (animation){
-                     controller.forward();
                      controller.reverse(from: 100);
                    }
                )
@@ -129,7 +128,9 @@ class _LoginScreenState extends State<LoginScreen>
                                          ?.copyWith(fontSize: 18),
                                      text: "Forgot password?",
                                      recognizer: TapGestureRecognizer()
-                                       ..onTap = () async {}
+                                       ..onTap = () async {
+                                       Navigator.of(context).pushNamed(Routes.forgotPassword);
+                                     }
                                  ),
                                ),
                              ],
