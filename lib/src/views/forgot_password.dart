@@ -1,7 +1,11 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/models/themeModel.dart';
-import 'package:flutter_weather/navigation/routes.dart';
-import 'package:flutter_weather/widgets/textInput.dart';
+import 'package:flutter_weather/core/enums/emailCheck.dart';
+import 'package:flutter_weather/core/firebase/isEmailRegistered.dart';
+import 'package:flutter_weather/core/firebase/sendForgetPasswordLink.dart';
+import 'package:flutter_weather/core/models/themeModel.dart';
+import 'package:flutter_weather/src/widgets/snackbar.dart';
+import 'package:flutter_weather/src/widgets/textInput.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +22,7 @@ class _ForgotPasswordState extends State<ForgotPassword>
   final _emailController = TextEditingController();
 
   late AnimationController controller;
+
 
   @override
   void initState(){
@@ -38,7 +43,6 @@ class _ForgotPasswordState extends State<ForgotPassword>
   Widget build(BuildContext context) {
 
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
 
     return SafeArea(
       child: Scaffold(
@@ -67,7 +71,13 @@ class _ForgotPasswordState extends State<ForgotPassword>
                           width: screenWidth * 0.8,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.5),
+                              color: Provider.of<ThemeModel>(
+                                  context,
+                                  listen: false
+                              )
+                                  .currentTheme
+                                  .colorScheme
+                                  .onSurface,
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(20),
@@ -94,7 +104,33 @@ class _ForgotPasswordState extends State<ForgotPassword>
                                     padding: const EdgeInsets.only(top: 50.0),
                                     child: MaterialButton(
                                         onPressed: (){
-                                          Navigator.of(context).pop();
+                                          FocusManager.instance.primaryFocus?.unfocus();
+                                          late bool isValidEmail = EmailValidator.validate(_emailController.text);
+                                          if(_emailController.text.isEmpty){
+                                            ErrorSnackBar.show(
+                                                context,
+                                                'Please enter your email address'
+                                            );
+                                          }
+                                          else if(!isValidEmail) {
+                                            ErrorSnackBar.show(
+                                                context,
+                                                'Invalid email or password'
+                                            );
+                                          } else {
+                                            checkIfEmailInUse(_emailController.text).then((state) {
+                                              switch (state) {
+                                                case EmailCheck.isUser:
+                                                  sendForgotPasswordEmail(_emailController.text);
+                                                  Navigator.of(context).pop();
+                                                  break;
+                                                case EmailCheck.notUser:
+                                                  ErrorSnackBar.show(context, 'Email not found');
+                                                  break;
+                                              }
+                                            });
+                                          }
+
                                         },
                                         color: Colors.grey,
                                         shape: RoundedRectangleBorder(
@@ -143,7 +179,13 @@ class _ForgotPasswordState extends State<ForgotPassword>
                         bottomLeft: Radius.circular(25)),
                   ),
                   elevation: 20,
-                  backgroundColor: Colors.black.withOpacity(0.5),
+                  backgroundColor: Provider.of<ThemeModel>(
+                      context,
+                      listen: false
+                  )
+                      .currentTheme
+                      .colorScheme
+                      .onSurface,
                 ),
               ],
             ),

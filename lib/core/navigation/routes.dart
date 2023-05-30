@@ -1,9 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_weather/views/create_account.dart';
-import 'package:flutter_weather/views/forgot_password.dart';
-import 'package:flutter_weather/views/loginScreen.dart';
-import 'package:flutter_weather/views/splashScreen.dart';
+import 'package:flutter_weather/src/views/create_account.dart';
+import 'package:flutter_weather/src/views/forgot_password.dart';
+import 'package:flutter_weather/src/views/loginScreen.dart';
+import 'package:flutter_weather/src/views/splashScreen.dart';
+
 
 class Routes {
   static const String splash = '/';

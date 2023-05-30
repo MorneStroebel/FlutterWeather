@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_weather/utils/config.dart';
+import 'package:flutter_weather/core/utils/config.dart';
 
 class Api {
   static String get _apiUrl => Config.apiUrl;

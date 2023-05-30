@@ -1,9 +1,13 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/models/themeModel.dart';
-import 'package:flutter_weather/navigation/routes.dart';
-import 'package:flutter_weather/widgets/passwordTextInput.dart';
-import 'package:flutter_weather/widgets/textInput.dart';
+import 'package:flutter_weather/core/enums/sign_in_enum.dart';
+import 'package:flutter_weather/core/firebase/emailSignIn.dart';
+import 'package:flutter_weather/core/models/themeModel.dart';
+import 'package:flutter_weather/core/navigation/routes.dart';
+import 'package:flutter_weather/src/widgets/passwordTextInput.dart';
+import 'package:flutter_weather/src/widgets/snackbar.dart';
+import 'package:flutter_weather/src/widgets/textInput.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -36,13 +40,14 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void dispose() {
     controller.dispose();
+    _passwordController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
   
  @override
  Widget build(BuildContext context){
 
-   final double screenHeight = MediaQuery.of(context).size.height;
    final double screenWidth = MediaQuery.of(context).size.width;
 
    return SafeArea(
@@ -68,7 +73,13 @@ class _LoginScreenState extends State<LoginScreen>
                  Center(
                    child: Container(
                      width: screenWidth * 0.8,
-                     color: Colors.black.withOpacity(0.5),
+                     color: Provider.of<ThemeModel>(
+                         context,
+                         listen: false
+                     )
+                         .currentTheme
+                         .colorScheme
+                         .onSurface,
                      child: Padding(
                        padding: const EdgeInsets.all(20),
                        child: Column(
@@ -138,7 +149,40 @@ class _LoginScreenState extends State<LoginScreen>
                            Padding(
                              padding: const EdgeInsets.only(top: 50.0),
                              child: MaterialButton(
-                               onPressed: (){},
+                               onPressed: (){
+                                 FocusManager.instance.primaryFocus?.unfocus();
+                                 late bool isValidEmail = EmailValidator.validate(_emailController.text);
+                                 if(_emailController.text.isEmpty || _passwordController.text.isEmpty){
+                                   ErrorSnackBar.show(
+                                       context,
+                                       'Please fill in both email and password'
+                                   );
+                                 } else if(!isValidEmail) {
+                                   ErrorSnackBar.show(
+                                       context,
+                                       'Invalid email or password'
+                                   );
+                                 } else {
+                                   emailSignIn(
+                                       _emailController.text,
+                                       _passwordController.text
+                                   ).then((state) {
+                                     switch(state) {
+                                       case SignIn.correct:
+                                         ErrorSnackBar.show(
+                                             context,
+                                             'Login'
+                                         );
+                                         break;
+                                       case SignIn.inCorrectEmailPassword:
+                                         ErrorSnackBar.show(
+                                             context,
+                                             'Incorrect email or password'
+                                         );
+                                     }
+                                   });
+                                 }
+                               },
                                color: Colors.grey,
                                  shape: RoundedRectangleBorder(
                                    borderRadius:  BorderRadius.circular(10),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/themes/theme.dart';
+import 'package:flutter_weather/src/themes/theme.dart';
 
 enum ThemeType{
   original,

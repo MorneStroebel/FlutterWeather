@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 ThemeData original = ThemeData(
   primaryColor: const Color(0xff38E9BB),
-  colorScheme: const ColorScheme(
+  colorScheme:  ColorScheme(
       brightness: Brightness.light,
-      primary: Color(0xff6949FD),
-      onPrimary: Color(0xffFFFFFF),
-      secondary: Color(0xff38E9BB),
+      primary: const Color(0xff6949FD),
+      onPrimary: const Color(0xffFFFFFF),
+      secondary: const Color(0xff38E9BB),
       onSecondary: Colors.transparent,
-      error: Color(0xffFFFFFF),
-      onError: Color(0xffFFFFFF),
-      background: Color(0xffFFFFFF),
-      onBackground: Color(0xffFFFFFF),
+      error: const Color(0xffFFFFFF),
+      onError: const Color(0xffFFFFFF),
+      background: const Color(0xffFFFFFF),
+      onBackground: const Color(0xffFFFFFF),
       surface: Colors.black,
-      onSurface: Color(0xffFFFFFF)
+      onSurface: Colors.black.withOpacity(0.5)
   ),
   fontFamily: 'ArialRound',
   scaffoldBackgroundColor: const Color(0xFF1F1147),

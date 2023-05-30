@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/navigation/routes.dart';
+import 'package:flutter_weather/core/navigation/routes.dart';
 import 'package:lottie/lottie.dart';
 
 
@@ -28,7 +28,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context){
 
-    final double screenHeight = MediaQuery.of(context).size.height * 0.95;
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(

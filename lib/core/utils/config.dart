@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_weather/enums/environment.dart';
+import 'package:flutter_weather/core/enums/environment.dart';
 
 class Config{
   static const String _path = 'assets/config';
