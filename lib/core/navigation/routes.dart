@@ -1,0 +1,21 @@
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_weather/src/views/create_account.dart';
+import 'package:flutter_weather/src/views/forgot_password.dart';
+import 'package:flutter_weather/src/views/loginScreen.dart';
+import 'package:flutter_weather/src/views/splashScreen.dart';
+
+
+class Routes {
+  static const String splash = '/';
+  static const String loginScreen = 'loginScreen';
+  static const String forgotPassword = 'forgotPassword';
+  static const String signUp = 'signUp';
+
+  static Map<String, Widget Function(Object? params)> map = {
+    splash: (Object? params) => const SplashScreen(),
+    loginScreen: (Object? params) => const LoginScreen(),
+    forgotPassword: (Object? params) => ForgotPassword(),
+    signUp: (Object? params) => CreateAccount(),
+  };
+}

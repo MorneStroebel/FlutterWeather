@@ -36,6 +36,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   lottie: ^2.3.2
+  flutter_animate: ^4.1.0
+  dio: ^5.0.0
+  provider: ^6.0.5
+  flutter_dotenv: ^4.0.0-nullsafety.0
+  firebase_core: ^2.13.0
+  firebase_auth: ^4.2.9
+  email_validator: ^2.1.17
+  cloud_firestore: ^4.4.3
+  recase: ^4.1.0
 
 dev_dependencies:
   flutter_test:
@@ -89,3 +98,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  assets:
+    - assets/images/
+    - assets/config/
+    - assets/anim/
+    - .env
+
+  fonts:
+    - family: ArialRound
+      fonts:
+        - asset: fonts/arial_round.ttf

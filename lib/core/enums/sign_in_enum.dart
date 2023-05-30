@@ -1,0 +1,4 @@
+enum SignIn{
+  correct,
+  inCorrectEmailPassword,
+}
