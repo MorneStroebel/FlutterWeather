@@ -8,7 +8,7 @@ ThemeData original = ThemeData(
       onPrimary: const Color(0xffFFFFFF),
       secondary: const Color(0xff38E9BB),
       onSecondary: Colors.transparent,
-      error: const Color(0xffFFFFFF),
+      error: Colors.grey,
       onError: const Color(0xffFFFFFF),
       background: const Color(0xffFFFFFF),
       onBackground: const Color(0xffFFFFFF),
@@ -20,7 +20,7 @@ ThemeData original = ThemeData(
   textTheme: const TextTheme(
     bodySmall: TextStyle(
       fontWeight: FontWeight.w400,
-      color: Color(0xff38E9BB),
+      color: Colors.grey,
     ),
     bodyMedium: TextStyle(
       fontWeight: FontWeight.w400,
@@ -28,7 +28,7 @@ ThemeData original = ThemeData(
     ),
     bodyLarge: TextStyle(
       fontWeight: FontWeight.w400,
-      color: Color(0xff6949FD),
+      color: Colors.black,
     ),
   ),
 );
