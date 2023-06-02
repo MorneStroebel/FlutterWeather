@@ -1,0 +1,4 @@
+enum EmailCheck{
+  isUser,
+  notUser,
+}
