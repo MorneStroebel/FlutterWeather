@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/core/enums/signUpEnums.dart';
-import 'package:flutter_weather/core/firebase/signUp.dart';
 import 'package:flutter_weather/core/models/themeModel.dart';
+import 'package:flutter_weather/core/services/firebase_services.dart';
 import 'package:flutter_weather/src/widgets/passwordTextInput.dart';
 import 'package:flutter_weather/src/widgets/snackbar.dart';
 import 'package:flutter_weather/src/widgets/textInput.dart';
@@ -19,6 +19,8 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount>
     with SingleTickerProviderStateMixin {
+
+  FirebaseServices firebaseServices = FirebaseServices();
 
   final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -154,7 +156,7 @@ class _CreateAccountState extends State<CreateAccount>
                                             );
                                           }
                                           else {
-                                            signUp(
+                                            firebaseServices.signUp(
                                                 _emailController.text,
                                                 _passwordController.text,
                                                 _usernameController.text

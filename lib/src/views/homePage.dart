@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/core/models/themeModel.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -13,13 +12,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-
-  Location location = Location();
-
-  getLocation() async {
-    return await location.getLocation();
-  }
-
 
   @override
   void initState() {
@@ -56,7 +48,7 @@ class HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  currentLocation.longitude.toString(),
+                                  "test",
                                   style: Provider
                                       .of<ThemeModel>(context)
                                       .currentTheme

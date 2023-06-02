@@ -1,15 +1,14 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/core/enums/locationEnums.dart';
 import 'package:flutter_weather/core/enums/sign_in_enum.dart';
-import 'package:flutter_weather/core/firebase/emailSignIn.dart';
 import 'package:flutter_weather/core/models/themeModel.dart';
 import 'package:flutter_weather/core/navigation/routes.dart';
 import 'package:flutter_weather/core/services/locationService.dart';
+import 'package:flutter_weather/src/viewmodels/login_view_model.dart';
 import 'package:flutter_weather/src/widgets/passwordTextInput.dart';
 import 'package:flutter_weather/src/widgets/snackbar.dart';
 import 'package:flutter_weather/src/widgets/textInput.dart';
+import 'package:location/location.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -23,15 +22,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   bool passwordVisible = false;
-
+  LoginViewModel viewModel = LoginViewModel();
   late AnimationController controller;
 
   @override
   void initState() {
     super.initState();
+
+    viewModel.passwordTextController = TextEditingController();
+    viewModel.emailTextController = TextEditingController();
+
     controller = AnimationController(
         duration: const Duration(seconds: 5),
         vsync: this
@@ -42,13 +43,15 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void dispose() {
     controller.dispose();
-    _passwordController.dispose();
-    _emailController.dispose();
+   viewModel.emailTextController.dispose();
+   viewModel.passwordTextController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    LocationService locationService = LocationService();
+
     final double screenWidth = MediaQuery
         .of(context)
         .size
@@ -115,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen>
                               padding: const EdgeInsets.only(top: 50),
                               child: TextInput(
                                   icon: Icons.email,
-                                  controller: _emailController,
+                                  controller: viewModel.emailTextController,
                                   hintText: "Enter your email...",
                                   labelText: "Email"
                               ),
@@ -131,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen>
                                     },
                                     passwordVisible: passwordVisible,
                                     icon: Icons.lock,
-                                    controller: _passwordController,
+                                    controller: viewModel.passwordTextController,
                                     hintText: 'Enter your password...',
                                     labelText: 'Password'
                                 )
@@ -160,63 +163,16 @@ class _LoginScreenState extends State<LoginScreen>
                             Padding(
                               padding: const EdgeInsets.only(top: 50.0),
                               child: MaterialButton(
-                                  onPressed: () {
-                                    checkLocationPermission().then((permission){
-                                      if(permission == LocationPermissionsState.enabled){
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-
-                                        late bool isValidEmail = EmailValidator
-                                            .validate(_emailController.text);
-
-                                        if (_emailController.text.isEmpty ||
-                                            _passwordController.text.isEmpty) {
-                                          ErrorSnackBar.show(
-                                              context,
-                                              'Please fill in both email and password'
-                                          );
-                                        } else if (!isValidEmail) {
-                                          ErrorSnackBar.show(
-                                              context,
-                                              'Invalid email or password'
-                                          );
-                                        } else {
-                                          emailSignIn(
-                                              _emailController.text,
-                                              _passwordController.text
-                                          ).then((state) {
-                                            switch (state) {
-                                              case SignIn.correct:
-                                                Navigator.of(context)
-                                                    .pushReplacementNamed(
-                                                    Routes.homePage);
-                                                break;
-                                              case SignIn.inCorrectEmailPassword:
-                                                ErrorSnackBar.show(
-                                                    context,
-                                                    'Incorrect email or password'
-                                                );
-                                            }
-                                          });
-                                        }
-                                      } else if(permission == LocationPermissionsState.notEnabled){
-                                        ErrorSnackBar.show(
-                                            context,
-                                            'Location services are disabled. Please enable the services'
-                                        );
-                                      } else if(permission == LocationPermissionsState.denied){
-                                        ErrorSnackBar.show(
-                                            context,
-                                            'Location permissions are denied'
-                                        );
-                                      } else if(permission == LocationPermissionsState.permanentDisabled){
-                                        ErrorSnackBar.show(
-                                            context,
-                                            'Location permissions are permanently denied, we cannot request permissions.'
-                                        );
-                                      }
-                                    });
-
+                                  onPressed: () async {
+                                    SignInEnum result = await viewModel.signInWithEmail();
+                                    LocationData? location = await locationService.getLocation();
+                                    if(mounted){
+                                      if(result == SignInEnum.emptyFields) ErrorSnackBar.show(context, 'fill in all fields');
+                                      if(result == SignInEnum.inValidEmail) ErrorSnackBar.show(context, 'invalid email');
+                                      if(result == SignInEnum.inCorrectEmailPassword) ErrorSnackBar.show(context, 'incorrect email or password');
+                                      if(result == SignInEnum.correct && location!= null) Navigator.of(context).pushReplacementNamed(Routes.homePage);
+                                      if(result == SignInEnum.correct && location == null) Navigator.of(context).pushReplacementNamed(Routes.noLocation);
+                                    }
                                   },
                                   color: Colors.grey,
                                   shape: RoundedRectangleBorder(

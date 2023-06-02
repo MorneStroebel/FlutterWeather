@@ -1,25 +1,29 @@
-import 'package:flutter_weather/core/enums/locationEnums.dart';
 import 'package:location/location.dart';
 
-Future<LocationPermissionsState> checkLocationPermission() async{
-  bool serviceEnabled;
-  PermissionStatus permissionStatus;
+class LocationService {
   Location location = Location();
 
-  serviceEnabled = await location.serviceEnabled();
-  if(!serviceEnabled){
-    return LocationPermissionsState.notEnabled;
+
+  Future<bool> isServiceEnabled() async {
+    bool isEnabled = await location.serviceEnabled();
+    if(isEnabled) return true;
+    return isEnabled = await location.requestService();
   }
 
-  permissionStatus = await location.hasPermission();
-  if(permissionStatus == PermissionStatus.denied){
+  Future<bool> hasPermission() async{
+    PermissionStatus permissionStatus = await location.hasPermission();
+    if(permissionStatus == PermissionStatus.granted) return true;
     permissionStatus = await location.requestPermission();
-    if(permissionStatus == PermissionStatus.denied){
-      return LocationPermissionsState.denied;
-    }
-    if(permissionStatus == PermissionStatus.deniedForever){
-      return LocationPermissionsState.permanentDisabled;
-    }
+    return (permissionStatus == PermissionStatus.granted);
   }
-  return LocationPermissionsState.enabled;
+
+  Future<LocationData?> getLocation() async{
+    bool userPermission = await hasPermission();
+    bool isEnabled = await isServiceEnabled();
+    if(userPermission && isEnabled){
+      LocationData currentLocation = await location.getLocation();
+      return currentLocation;
+    }
+    return null;
+  }
 }

@@ -1,9 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/core/enums/emailCheck.dart';
-import 'package:flutter_weather/core/firebase/isEmailRegistered.dart';
-import 'package:flutter_weather/core/firebase/sendForgetPasswordLink.dart';
 import 'package:flutter_weather/core/models/themeModel.dart';
+import 'package:flutter_weather/core/services/firebase_services.dart';
 import 'package:flutter_weather/src/widgets/snackbar.dart';
 import 'package:flutter_weather/src/widgets/textInput.dart';
 import 'package:lottie/lottie.dart';
@@ -23,6 +22,7 @@ class _ForgotPasswordState extends State<ForgotPassword>
 
   late AnimationController controller;
 
+  FirebaseServices firebaseServices = FirebaseServices();
 
   @override
   void initState(){
@@ -118,10 +118,10 @@ class _ForgotPasswordState extends State<ForgotPassword>
                                                 'Invalid email or password'
                                             );
                                           } else {
-                                            checkIfEmailInUse(_emailController.text).then((state) {
+                                            firebaseServices.checkIfEmailInUse(_emailController.text).then((state) {
                                               switch (state) {
                                                 case EmailCheck.isUser:
-                                                  sendForgotPasswordEmail(_emailController.text);
+                                                  firebaseServices.sendForgotPasswordEmail(_emailController.text);
                                                   Navigator.of(context).pop();
                                                   break;
                                                 case EmailCheck.notUser:

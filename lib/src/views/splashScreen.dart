@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/core/navigation/routes.dart';
+import 'package:flutter_weather/core/services/firebase_services.dart';
 import 'package:lottie/lottie.dart';
 
 
@@ -13,14 +14,16 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+  FirebaseServices firebaseServices = FirebaseServices();
+
   @override
   void initState(){
     super.initState();
     Future.delayed(
-        const Duration(seconds: 3),
-            ()
+        const Duration(seconds: 3), ()
         {
-          Navigator.of(context).pushReplacementNamed(Routes.loginScreen);
+          if(firebaseServices.isUserLogin() == null)  Navigator.of(context).pushReplacementNamed(Routes.loginScreen);
+          if(firebaseServices.isUserLogin() != null) Navigator.of(context).pushReplacementNamed(Routes.homePage);
         }
     );
   }

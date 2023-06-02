@@ -1,4 +1,7 @@
-enum SignIn{
+enum SignInEnum{
   correct,
   inCorrectEmailPassword,
+  emptyFields,
+  inValidEmail,
+  unknownError
 }
