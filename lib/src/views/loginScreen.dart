@@ -22,14 +22,19 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
 
+  LocationService locationService = LocationService();
+
   bool passwordVisible = false;
   LoginViewModel viewModel = LoginViewModel();
+  late bool hasLocation;
   late AnimationController controller;
+  late Future<LocationData?>? location;
+
 
   @override
   void initState() {
     super.initState();
-
+    location = locationService.getLocation();
     viewModel.passwordTextController = TextEditingController();
     viewModel.emailTextController = TextEditingController();
 
@@ -50,12 +55,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    LocationService locationService = LocationService();
 
-    final double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double screenWidth = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -165,12 +166,11 @@ class _LoginScreenState extends State<LoginScreen>
                               child: MaterialButton(
                                   onPressed: () async {
                                     SignInEnum result = await viewModel.signInWithEmail();
-                                    LocationData? location = await locationService.getLocation();
                                     if(mounted){
                                       if(result == SignInEnum.emptyFields) ErrorSnackBar.show(context, 'fill in all fields');
                                       if(result == SignInEnum.inValidEmail) ErrorSnackBar.show(context, 'invalid email');
                                       if(result == SignInEnum.inCorrectEmailPassword) ErrorSnackBar.show(context, 'incorrect email or password');
-                                      if(result == SignInEnum.correct && location!= null) Navigator.of(context).pushReplacementNamed(Routes.homePage);
+                                      if(result == SignInEnum.correct && location != null) Navigator.of(context).pushReplacementNamed(Routes.homePage);
                                       if(result == SignInEnum.correct && location == null) Navigator.of(context).pushReplacementNamed(Routes.noLocation);
                                     }
                                   },

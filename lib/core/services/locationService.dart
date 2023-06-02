@@ -17,7 +17,7 @@ class LocationService {
     return (permissionStatus == PermissionStatus.granted);
   }
 
-  Future<LocationData?> getLocation() async{
+  Future<LocationData?>? getLocation() async{
     bool userPermission = await hasPermission();
     bool isEnabled = await isServiceEnabled();
     if(userPermission && isEnabled){
