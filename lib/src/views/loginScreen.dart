@@ -8,7 +8,6 @@ import 'package:flutter_weather/src/viewmodels/login_view_model.dart';
 import 'package:flutter_weather/src/widgets/passwordTextInput.dart';
 import 'package:flutter_weather/src/widgets/snackbar.dart';
 import 'package:flutter_weather/src/widgets/textInput.dart';
-import 'package:location/location.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -28,13 +27,11 @@ class _LoginScreenState extends State<LoginScreen>
   LoginViewModel viewModel = LoginViewModel();
   late bool hasLocation;
   late AnimationController controller;
-  late Future<LocationData?>? location;
 
 
   @override
   void initState() {
     super.initState();
-    location = locationService.getLocation();
     viewModel.passwordTextController = TextEditingController();
     viewModel.emailTextController = TextEditingController();
 
@@ -167,11 +164,20 @@ class _LoginScreenState extends State<LoginScreen>
                                   onPressed: () async {
                                     SignInEnum result = await viewModel.signInWithEmail();
                                     if(mounted){
-                                      if(result == SignInEnum.emptyFields) ErrorSnackBar.show(context, 'fill in all fields');
-                                      if(result == SignInEnum.inValidEmail) ErrorSnackBar.show(context, 'invalid email');
-                                      if(result == SignInEnum.inCorrectEmailPassword) ErrorSnackBar.show(context, 'incorrect email or password');
-                                      if(result == SignInEnum.correct && location != null) Navigator.of(context).pushReplacementNamed(Routes.homePage);
-                                      if(result == SignInEnum.correct && location == null) Navigator.of(context).pushReplacementNamed(Routes.noLocation);
+                                      switch(result) {
+                                        case SignInEnum.emptyFields:
+                                          ErrorSnackBar.show(context, 'fill in all fields');
+                                          break;
+                                        case SignInEnum.inValidEmail:
+                                          ErrorSnackBar.show(context, 'invalid email');
+                                          break;
+                                        case SignInEnum.inCorrectEmailPassword:
+                                          ErrorSnackBar.show(context, 'incorrect email or password');
+                                          break;
+                                        case SignInEnum.correct:
+                                          Navigator.of(context).pushReplacementNamed(Routes.homePage);
+                                          break;
+                                      }
                                     }
                                   },
                                   color: Colors.grey,

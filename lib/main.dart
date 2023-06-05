@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_weather/core/models/themeModel.dart';
 import 'package:flutter_weather/core/navigation/route_builder.dart';
 import 'package:flutter_weather/core/utils/config.dart';
@@ -11,6 +12,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initFirebase();
   await Config.init();
+  await dotenv.load();
 
 
   runApp(
