@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/core/models/themeModel.dart';
-import 'package:flutter_weather/core/models/weather_model.dart';
+import 'package:flutter_weather/core/models/current_weather_model.dart';
 import 'package:flutter_weather/core/navigation/routes.dart';
 import 'package:flutter_weather/core/services/firebase_services.dart';
 import 'package:flutter_weather/core/services/locationService.dart';
-import 'package:flutter_weather/src/bloc/weather_bloc.dart';
+import 'package:flutter_weather/src/bloc/current_weather_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:lottie/lottie.dart';
@@ -26,7 +26,7 @@ class HomePageState extends State<HomePage> {
   final LocationService _locationService = LocationService();
 
   late StreamSubscription<User> loginStateSubscription;
-  late WeatherBlock _weatherBlock;
+  late CurrentWeatherBlock _weatherBlock;
   late Future<LocationData?> futureLocation;
 
   LocationData? currentLocation;
@@ -34,9 +34,10 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _weatherBlock = WeatherBlock();
+    _weatherBlock = CurrentWeatherBlock();
     futureLocation = _locationService.getLocation().then((value) async {
-      if (value == null) Navigator.of(context).pushReplacementNamed(Routes.noLocation);
+      if (value == null) Navigator.of(context).pushReplacementNamed(
+          Routes.noLocation);
       currentLocation = value;
       _weatherBlock.lat = currentLocation?.latitude;
       _weatherBlock.lon = currentLocation?.longitude;
@@ -76,7 +77,7 @@ class HomePageState extends State<HomePage> {
                         builder: (BuildContext context,
                             AsyncSnapshot snapshot) {
                           if (snapshot.hasData) {
-                            WeatherModel weatherModel = snapshot.data;
+                            CurrentWeatherModel weatherModel = snapshot.data;
                             return Column(
                               children: [
                                 Padding(
@@ -142,10 +143,12 @@ class HomePageState extends State<HomePage> {
                                           padding: const EdgeInsets.only(
                                               bottom: 80),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment
+                                                .end,
                                             children: [
                                               Text(
-                                                "${weatherModel.temp.round()} °C",
+                                                "${weatherModel.temp
+                                                    .round()} °C",
                                                 style: Provider
                                                     .of<ThemeModel>(context)
                                                     .currentTheme
@@ -216,7 +219,8 @@ class HomePageState extends State<HomePage> {
                                                           .only(
                                                           top: 3),
                                                       child: Text(
-                                                        '${(weatherModel.wind * 3.6).round()} km/h',
+                                                        '${(weatherModel.wind *
+                                                            3.6).round()} km/h',
                                                         style: Provider
                                                             .of<ThemeModel>(
                                                             context)
@@ -257,7 +261,8 @@ class HomePageState extends State<HomePage> {
                                                           .only(
                                                           top: 3),
                                                       child: Text(
-                                                        '${weatherModel.humidity} %',
+                                                        '${weatherModel
+                                                            .humidity} %',
                                                         style: Provider
                                                             .of<ThemeModel>(
                                                             context)
@@ -294,9 +299,11 @@ class HomePageState extends State<HomePage> {
                                                           .bodySmall,
                                                     ),
                                                     Padding(
-                                                      padding: const EdgeInsets.only(top: 3),
+                                                      padding: const EdgeInsets
+                                                          .only(top: 3),
                                                       child: Text(
-                                                        '${weatherModel.pressure} hPa',
+                                                        '${weatherModel
+                                                            .pressure} hPa',
                                                         style: Provider
                                                             .of<ThemeModel>(
                                                             context)
@@ -347,7 +354,12 @@ class HomePageState extends State<HomePage> {
                               ],
                             );
                           } else {
-                            return const Text("test");
+                            return Column(
+                                children: [
+                                  Lottie.asset(
+                                      'assets/anim/loading_indicator.json')
+                                ]
+                            );
                           }
                         }
                     ),

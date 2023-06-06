@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_weather/core/data/api/api.dart';
 import 'package:flutter_weather/core/enums/sign_in_enum.dart';
-import 'package:flutter_weather/core/models/weather_model.dart';
+import 'package:flutter_weather/core/models/current_weather_model.dart';
 import 'package:flutter_weather/core/services/firebase_services.dart';
 import 'package:flutter_weather/core/services/locationService.dart';
 import 'package:location/location.dart';
@@ -33,10 +33,6 @@ class LoginViewModel {
     if (!validEmail()) return SignInEnum.inValidEmail;
     return await firebaseServices.emailSignIn(
         emailTextController.text, passwordTextController.text);
-  }
-
-  static Future<WeatherModel> _getWeatherData(double lon, double lat) async {
-    return  WeatherModel.fromMap(await Api.get(lon, lat));
   }
 
 }

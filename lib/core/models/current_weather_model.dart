@@ -1,4 +1,4 @@
-class WeatherModel{
+class CurrentWeatherModel{
 
   final String cityName;
   final String country;
@@ -7,7 +7,7 @@ class WeatherModel{
   final int pressure;
   final double wind;
 
-  WeatherModel({
+  CurrentWeatherModel({
     required this.cityName,
     required this.country,
     required this.temp,
@@ -16,18 +16,18 @@ class WeatherModel{
     required this.wind
 });
 
-  factory WeatherModel.fromMap(Map<String, dynamic> json) => WeatherModel(
+  factory CurrentWeatherModel.fromMap(Map<String, dynamic> json) => CurrentWeatherModel(
     cityName: json['name'],
     country: json['sys']['country'],
     temp: json['main']['temp'],
     humidity: json['main']['humidity'],
     pressure: json['main']['pressure'],
-    wind: json['wind']['gust'],
+    wind: json['wind']['speed'],
   );
 
-  static List<WeatherModel> fromMapList(List<dynamic> jsonList) {
+  static List<CurrentWeatherModel> fromMapList(List<dynamic> jsonList) {
     return jsonList.map((json) {
-      return WeatherModel.fromMap(json);
+      return CurrentWeatherModel.fromMap(json);
     }).toList();
   }
 
