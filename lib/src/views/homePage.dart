@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_weather/core/models/themeModel.dart';
 import 'package:flutter_weather/core/models/current_weather_model.dart';
 import 'package:flutter_weather/core/navigation/routes.dart';
-import 'package:flutter_weather/core/services/firebase_services.dart';
 import 'package:flutter_weather/core/services/locationService.dart';
 import 'package:flutter_weather/src/bloc/current_weather_bloc.dart';
+import 'package:flutter_weather/src/bloc/forecast_block.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:lottie/lottie.dart';
@@ -22,11 +22,11 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
 
-  final FirebaseServices _firebaseServices = FirebaseServices();
   final LocationService _locationService = LocationService();
 
   late StreamSubscription<User> loginStateSubscription;
-  late CurrentWeatherBlock _weatherBlock;
+  late CurrentWeatherBlock _currentWeatherBlock;
+  late ForecastWeatherBloc _forecastWeatherBloc;
   late Future<LocationData?> futureLocation;
 
   LocationData? currentLocation;
@@ -34,21 +34,29 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _weatherBlock = CurrentWeatherBlock();
+    _currentWeatherBlock = CurrentWeatherBlock();
+    _forecastWeatherBloc =ForecastWeatherBloc();
     futureLocation = _locationService.getLocation().then((value) async {
-      if (value == null) Navigator.of(context).pushReplacementNamed(
-          Routes.noLocation);
+
+      if (value == null) Navigator.of(context).pushReplacementNamed(Routes.noLocation);
       currentLocation = value;
-      _weatherBlock.lat = currentLocation?.latitude;
-      _weatherBlock.lon = currentLocation?.longitude;
-      await _weatherBlock.getData();
+
+      _currentWeatherBlock.lat = currentLocation?.latitude;
+      _currentWeatherBlock.lon = currentLocation?.longitude;
+      await _currentWeatherBlock.getData();
+
+      _forecastWeatherBloc.lat = currentLocation?.latitude;
+      _forecastWeatherBloc.lon = currentLocation?.longitude;
+      await _forecastWeatherBloc.getData();
+
       return currentLocation;
     });
   }
 
   @override
   void dispose() {
-    _weatherBlock.dispose();
+    _currentWeatherBlock.dispose();
+    _forecastWeatherBloc.dispose();
     super.dispose();
   }
 
@@ -73,7 +81,7 @@ class HomePageState extends State<HomePage> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: StreamBuilder(
-                        stream: _weatherBlock.streamWeatherData,
+                        stream: _currentWeatherBlock.streamWeatherData,
                         builder: (BuildContext context,
                             AsyncSnapshot snapshot) {
                           if (snapshot.hasData) {
@@ -302,8 +310,7 @@ class HomePageState extends State<HomePage> {
                                                       padding: const EdgeInsets
                                                           .only(top: 3),
                                                       child: Text(
-                                                        '${weatherModel
-                                                            .pressure} hPa',
+                                                        '${weatherModel.pressure} hPa',
                                                         style: Provider
                                                             .of<ThemeModel>(
                                                             context)
@@ -322,35 +329,36 @@ class HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 ),
-                                MaterialButton(
-                                    onPressed: () {
-                                      _firebaseServices.signOut();
-                                      Navigator.of(context)
-                                          .pushReplacementNamed(
-                                          Routes.loginScreen);
-                                    },
-                                    color: Colors.grey,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      constraints: BoxConstraints(
-                                        minHeight: 30,
-                                        maxWidth: screenWidth * 0.4,
-                                      ),
-                                      child: Text(
-                                        "sign out",
-                                        textAlign: TextAlign.center,
-                                        style: Provider
-                                            .of<ThemeModel>(context)
-                                            .currentTheme
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(fontSize: 26),
-                                      ),
-                                    )
-                                )
+                                // StreamBuilder(
+                                //   stream: _forecastWeatherBloc.streamWeatherData,
+                                //   builder: (context, AsyncSnapshot snapshot) {
+                                //     if(snapshot.hasData){
+                                //       return Padding(
+                                //         padding: const EdgeInsets.all(20),
+                                //         child: Container(
+                                //           alignment: Alignment.center,
+                                //           constraints: BoxConstraints(
+                                //             minHeight: screenHeight * 0.3,
+                                //             maxWidth: screenWidth,
+                                //           ),
+                                //           color: Colors.pink,
+                                //           child: ListView.builder(
+                                //             scrollDirection: Axis.horizontal,
+                                //             itemBuilder: (BuildContext context, int index) {  },
+                                //           )
+                                //         ),
+                                //       );
+                                //     }
+                                //     else {
+                                //       return Column(
+                                //           children: [
+                                //             Lottie.asset(
+                                //                 'assets/anim/loading_indicator.json')
+                                //           ]
+                                //       );
+                                //     }
+                                //   }
+                                // )
                               ],
                             );
                           } else {
