@@ -57,10 +57,10 @@ class _SplashScreenState extends State<SplashScreen> {
                       child: SizedBox(
                         height: screenWidth,
                         width: screenWidth,
-                        child: Column(
+                        child: const Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Padding(
                               padding: EdgeInsets.only(top: 80),
                               child: Text(

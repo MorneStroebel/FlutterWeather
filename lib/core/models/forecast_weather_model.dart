@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final forecastWeatherModel = forecastWeatherModelFromJson(jsonString);
-
 import 'dart:convert';
 
 class ForecastWeatherModel {
@@ -27,7 +23,7 @@ class ForecastWeatherModel {
     cod: json["cod"],
     message: json["message"],
     cnt: json["cnt"],
-    forecastWeather: List<ForecastWeather>.from(json["forecastWeather"].map((x) => ForecastWeather.fromJson(x))),
+    forecastWeather: List<ForecastWeather>.from(json["list"].map((x) => ForecastWeather.fromJson(x))),
     city: City.fromJson(json["city"]),
   );
 
