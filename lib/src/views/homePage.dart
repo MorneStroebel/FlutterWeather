@@ -38,8 +38,7 @@ class HomePageState extends State<HomePage> {
     _currentWeatherBlock = CurrentWeatherBlock();
     _forecastWeatherBloc = ForecastWeatherBloc();
     futureLocation = _locationService.getLocation().then((value) async {
-      if (value == null) Navigator.of(context).pushReplacementNamed(
-          Routes.noLocation);
+      if (value == null) Navigator.of(context).pushReplacementNamed(Routes.noLocation);
       currentLocation = value;
 
       _currentWeatherBlock.lat = currentLocation?.latitude;
@@ -122,18 +121,18 @@ class HomePageState extends State<HomePage> {
                                         )
                                       ],
                                     ),
-                                    const Spacer(),
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                          Icons.add_location_alt_rounded),
-                                      color: Provider
-                                          .of<ThemeModel>(context)
-                                          .currentTheme
-                                          .colorScheme
-                                          .onBackground,
-                                      iconSize: 40,
-                                    )
+                                    // const Spacer(),
+                                    // IconButton(
+                                    //   onPressed: () {},
+                                    //   icon: const Icon(
+                                    //       Icons.add_location_alt_rounded),
+                                    //   color: Provider
+                                    //       .of<ThemeModel>(context)
+                                    //       .currentTheme
+                                    //       .colorScheme
+                                    //       .onBackground,
+                                    //   iconSize: 40,
+                                    // )
                                   ],
                                 ),
                               ),
@@ -358,7 +357,51 @@ class HomePageState extends State<HomePage> {
                                               itemCount: forecast
                                                   .forecastWeather.length,
                                               itemBuilder: (context, index) {
-                                                return Text('${forecast.forecastWeather[index].main.tempMin.round()}');
+                                                return Card(
+                                                  color: Provider
+                                                    .of<ThemeModel>(context)
+                                                    .currentTheme
+                                                    .colorScheme
+                                                    .background,
+                                                  shadowColor: Colors.black54,
+                                                  elevation: 10,
+                                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(15),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          'Min: \t ${forecast.forecastWeather[index].main.tempMin} °C',
+                                                          style: Provider
+                                                              .of<ThemeModel>(
+                                                              context)
+                                                              .currentTheme
+                                                              .textTheme
+                                                              .bodyLarge,
+                                                        ),
+                                                        Text(
+                                                          'Max: \t ${forecast.forecastWeather[index].main.tempMax} °C',
+                                                          style: Provider
+                                                              .of<ThemeModel>(
+                                                              context)
+                                                              .currentTheme
+                                                              .textTheme
+                                                              .bodyLarge,
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top: 10),
+                                                          child: Lottie.asset(
+                                                              'assets/anim/clear.json',
+                                                            height: screenWidth  * 0.3,
+                                                            width: screenWidth * 0.3
+                                                          ),
+                                                        )
+
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
                                               },
                                             ),
                                           ),
