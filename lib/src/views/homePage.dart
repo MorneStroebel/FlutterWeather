@@ -9,6 +9,7 @@ import 'package:flutter_weather/core/navigation/routes.dart';
 import 'package:flutter_weather/core/services/locationService.dart';
 import 'package:flutter_weather/src/bloc/current_weather_bloc.dart';
 import 'package:flutter_weather/src/bloc/forecast_block.dart';
+import 'package:flutter_weather/src/viewmodels/home_view_model.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:lottie/lottie.dart';
@@ -31,6 +32,7 @@ class HomePageState extends State<HomePage> {
   late Future<LocationData?> futureLocation;
 
   LocationData? currentLocation;
+  HomeViewModel viewModel = HomeViewModel();
 
   @override
   void initState() {
@@ -101,9 +103,9 @@ class HomePageState extends State<HomePage> {
                                       children: [
                                         Text(
                                             '${weatherModel
-                                                .cityName}, '
+                                                .name}, '
                                                 '${weatherModel
-                                                .country}',
+                                                .sys.country}',
                                             style: Provider
                                                 .of<ThemeModel>(context)
                                                 .currentTheme
@@ -143,8 +145,7 @@ class HomePageState extends State<HomePage> {
                                   children: [
                                     SizedBox(
                                         width: screenWidth,
-                                        child: Lottie.asset(
-                                            'assets/anim/clear.json')
+                                        child: Lottie.asset(viewModel.animType(weatherModel.weather[0].description))
                                     ),
                                     SizedBox(
                                       width: screenWidth,
@@ -157,7 +158,7 @@ class HomePageState extends State<HomePage> {
                                               .end,
                                           children: [
                                             Text(
-                                              "${weatherModel.temp
+                                              "${weatherModel.main.temp
                                                   .round()} °C",
                                               style: Provider
                                                   .of<ThemeModel>(context)
@@ -229,7 +230,7 @@ class HomePageState extends State<HomePage> {
                                                         .only(
                                                         top: 3),
                                                     child: Text(
-                                                      '${(weatherModel.wind *
+                                                      '${(weatherModel.wind.speed *
                                                           3.6).round()} km/h',
                                                       style: Provider
                                                           .of<ThemeModel>(
@@ -271,8 +272,7 @@ class HomePageState extends State<HomePage> {
                                                         .only(
                                                         top: 3),
                                                     child: Text(
-                                                      '${weatherModel
-                                                          .humidity} %',
+                                                      '${weatherModel.main.humidity} %',
                                                       style: Provider
                                                           .of<ThemeModel>(
                                                           context)
@@ -312,8 +312,7 @@ class HomePageState extends State<HomePage> {
                                                     padding: const EdgeInsets
                                                         .only(top: 3),
                                                     child: Text(
-                                                      '${weatherModel
-                                                          .pressure} hPa',
+                                                      '${weatherModel.main.pressure} hPa',
                                                       style: Provider
                                                           .of<ThemeModel>(
                                                           context)
@@ -371,28 +370,81 @@ class HomePageState extends State<HomePage> {
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
+                                                        if(DateFormat('HH:mm').format(forecast.forecastWeather[index].dtTxt).toString() == '00:00' && index != 0)
+                                                          Text(
+                                                            DateFormat('EEEE, MMMM d').format(forecast.forecastWeather[index].dtTxt),
+                                                            style: Provider
+                                                                .of<ThemeModel>(
+                                                                context)
+                                                                .currentTheme
+                                                                .textTheme
+                                                                .bodyLarge
+                                                                ?.copyWith(color: Colors.grey),
+                                                          ),
+                                                        if(DateFormat('HH:mm').format(forecast.forecastWeather[index].dtTxt).toString() == '00:00' && index == 0)
+                                                          Text(
+                                                            'Now',
+                                                            style: Provider
+                                                                .of<ThemeModel>(
+                                                                context)
+                                                                .currentTheme
+                                                                .textTheme
+                                                                .bodyLarge
+                                                                ?.copyWith(color: Colors.grey),
+                                                          ),
+                                                        if(DateFormat('HH:mm').format(forecast.forecastWeather[index].dtTxt).toString() != '00:00' &&  index != 0)
+                                                          Text(
+                                                            '',
+                                                            style: Provider
+                                                                .of<ThemeModel>(
+                                                                context)
+                                                                .currentTheme
+                                                                .textTheme
+                                                                .bodyLarge
+                                                                ?.copyWith(color: Colors.grey),
+                                                          ),
+                                                        if(DateFormat('HH:mm').format(forecast.forecastWeather[index].dtTxt).toString() != '00:00' && index == 0)
+                                                          Text(
+                                                            'Now',
+                                                            style: Provider
+                                                                .of<ThemeModel>(
+                                                                context)
+                                                                .currentTheme
+                                                                .textTheme
+                                                                .bodyLarge
+                                                                ?.copyWith(color: Colors.grey),
+                                                          ),
                                                         Text(
-                                                          'Min: \t ${forecast.forecastWeather[index].main.tempMin} °C',
+                                                          DateFormat('HH:mm').format(forecast.forecastWeather[index].dtTxt),
                                                           style: Provider
                                                               .of<ThemeModel>(
                                                               context)
                                                               .currentTheme
                                                               .textTheme
-                                                              .bodyLarge,
+                                                              .bodyLarge
+                                                              ?.copyWith(color: Colors.grey),
                                                         ),
-                                                        Text(
-                                                          'Max: \t ${forecast.forecastWeather[index].main.tempMax} °C',
-                                                          style: Provider
-                                                              .of<ThemeModel>(
-                                                              context)
-                                                              .currentTheme
-                                                              .textTheme
-                                                              .bodyLarge,
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top: 10, bottom: 5),
+                                                          child: SizedBox(
+                                                            width: screenWidth * 0.3,
+                                                            child: Text(
+                                                              '${forecast.forecastWeather[index].main.tempMin.round()} °C',
+                                                              style: Provider
+                                                                  .of<ThemeModel>(
+                                                                  context)
+                                                                  .currentTheme
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                              ?.copyWith(fontSize: 22, fontWeight: FontWeight.w800),
+                                                              textAlign: TextAlign.center,
+                                                            ),
+                                                          ),
                                                         ),
                                                         Padding(
                                                           padding: const EdgeInsets.only(top: 10),
                                                           child: Lottie.asset(
-                                                              'assets/anim/clear.json',
+                                                              viewModel.animType(forecast.forecastWeather[index].weather[0].description),
                                                             height: screenWidth  * 0.3,
                                                             width: screenWidth * 0.3
                                                           ),

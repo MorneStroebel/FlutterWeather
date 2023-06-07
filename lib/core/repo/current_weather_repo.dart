@@ -3,6 +3,6 @@ import 'package:flutter_weather/core/models/current_weather_model.dart';
 
 class CurrentWeatherRepo{
   static Future<CurrentWeatherModel> getWeatherData(double? lon, double? lat) async {
-    return  CurrentWeatherModel.fromMap(await Api.get("weather",lon, lat));
+    return  CurrentWeatherModel.fromJson(await Api.get("weather?",lon, lat));
   }
 }
